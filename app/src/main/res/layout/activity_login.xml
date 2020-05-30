@@ -52,15 +52,14 @@
         android:layout_marginTop="24dp"
         android:fontFamily="@font/yellowtail"
         android:onClick="buSignup"
-        android:text="sign up "
+        android:text="Not a member? Sign up"
         android:textColor="@color/colorOrange"
-        android:textSize="30sp"
+        android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.609"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password"
-        app:layout_constraintVertical_bias="0.648" />
+        app:layout_constraintVertical_bias="0.685" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -68,24 +67,18 @@
         android:layout_height="104dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.896"
+        app:layout_constraintVertical_bias="0.877"
         app:srcCompat="@drawable/login_orange_button" />
 
-    <TextView
-        android:id="@+id/textView"
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Not member ?"
-        android:textColor="#fff"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/signup"
-        app:layout_constraintHorizontal_bias="0.841"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.938" />
+        tools:layout_editor_absoluteX="181dp"
+        tools:layout_editor_absoluteY="538dp" />
 
 </android.support.constraint.ConstraintLayout>
