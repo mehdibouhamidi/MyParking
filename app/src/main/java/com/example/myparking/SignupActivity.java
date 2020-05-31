@@ -13,9 +13,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignupActivity extends AppCompatActivity {
     EditText signup_username, signup_email,signup_pass,signup_pass_confim,matricule;
@@ -23,6 +29,9 @@ public class SignupActivity extends AppCompatActivity {
     TextView sloginBtn;
     private FirebaseAuth fAuth;
     ProgressBar progressBar;
+    FirebaseFirestore fStore;
+    String userID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +47,7 @@ public class SignupActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progressBar_log);
         fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
 
         sloginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,9 +65,11 @@ public class SignupActivity extends AppCompatActivity {
         butlogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = signup_email.getText().toString().trim();
+                final String email = signup_email.getText().toString();
                 String password = signup_pass.getText().toString().trim();
                 String password_conf = signup_pass_confim.getText().toString().trim();
+                final String username = signup_username.getText().toString();
+                final String matricule_vehicule = matricule.getText().toString();
                 if(TextUtils.isEmpty(email)){
                     signup_email.setError("Email is required");
                     return;
@@ -75,10 +87,10 @@ public class SignupActivity extends AppCompatActivity {
                     signup_pass.setError("password must be >6 characters");
                     return;
                 }
-                if(signup_pass.getText().toString().trim() != signup_pass_confim.getText().toString().trim()){
+              /*if(signup_pass.getText().toString() != signup_pass_confim.getText().toString()){
                     signup_pass_confim.setError("password is not the same ");
                     return;
-                }
+                }*/
                 progressBar.setVisibility(View.VISIBLE);
                 //enregistrement d'utilisateur
 
@@ -88,6 +100,18 @@ public class SignupActivity extends AppCompatActivity {
 
                             if(task.isSuccessful()) {
                                 Toast.makeText(SignupActivity.this, "succues", Toast.LENGTH_SHORT).show();
+                                userID = fAuth.getCurrentUser().getUid();
+                                DocumentReference documentReference = fStore.collection("Utilisateurs").document(userID);
+                                Map<String,Object> user = new HashMap<>();
+                                user.put("username",username);
+                                user.put("matricule",matricule_vehicule);
+                                user.put("email",email);
+                                documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(SignupActivity.this, "success create", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                                 startActivity(new Intent(getApplicationContext(),Home.class));
                             }else{
                                 Toast.makeText(SignupActivity.this, "failed", Toast.LENGTH_SHORT).show();
@@ -100,8 +124,7 @@ public class SignupActivity extends AppCompatActivity {
                 }
 
             }
-
         );
     }}
 
-    
+
