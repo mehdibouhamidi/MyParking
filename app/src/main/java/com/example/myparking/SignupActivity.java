@@ -36,7 +36,7 @@ public class SignupActivity extends AppCompatActivity {
         butlogin = findViewById(R.id.butlogin);
         sloginBtn = findViewById(R.id.sloginBtn);
 
-        progressBar = findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.progressBar_log);
         fAuth = FirebaseAuth.getInstance();
 
         sloginBtn.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +75,10 @@ public class SignupActivity extends AppCompatActivity {
                     signup_pass.setError("password must be >6 characters");
                     return;
                 }
+                if(signup_pass.getText().toString().trim() != signup_pass_confim.getText().toString().trim()){
+                    signup_pass_confim.setError("password is not the same ");
+                    return;
+                }
                 progressBar.setVisibility(View.VISIBLE);
                 //enregistrement d'utilisateur
 
@@ -87,6 +91,7 @@ public class SignupActivity extends AppCompatActivity {
                                 startActivity(new Intent(getApplicationContext(),Home.class));
                             }else{
                                 Toast.makeText(SignupActivity.this, "failed", Toast.LENGTH_SHORT).show();
+                                progressBar.setVisibility(View.GONE);
                             }
                     }
                 });
