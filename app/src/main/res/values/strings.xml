@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">My Parking</string>
+    <string name="title_activity_user_localisation">Map</string>
 </resources>
