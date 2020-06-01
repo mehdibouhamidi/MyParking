@@ -1,8 +1,8 @@
 package com.example.myparking;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -74,7 +74,9 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         });
+
     }
+
 
     public void buSignup(View view) {
         Intent mainIntent = new Intent(LoginActivity.this,SignupActivity.class);
