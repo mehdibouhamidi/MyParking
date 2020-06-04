@@ -24,6 +24,32 @@ public class LoginActivity extends AppCompatActivity {
     TextView signup;
     private FirebaseAuth fAuth;
 
+    private long backPressedTime;
+    private Toast backToast;
+
+
+    @Override
+    public void onBackPressed() {
+
+
+        if(backPressedTime + 2000 > System.currentTimeMillis()){
+            backToast.cancel();
+            super.onBackPressed();
+
+            return;
+
+
+        }else{
+            backToast = Toast.makeText(getBaseContext(),"Tapez une autre fois pour quitter",Toast.LENGTH_SHORT);
+            backToast.show();
+
+            System.exit(0);
+        }
+        backPressedTime = System.currentTimeMillis();
+        LoginActivity.this.finish();
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +92,8 @@ public class LoginActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(),Home.class));
+                            finish();
+
                         }else{
                             Toast.makeText(LoginActivity.this, "there is no user or wrong password ", Toast.LENGTH_SHORT).show();
                             progressBar_log.setVisibility(View.GONE);
@@ -81,5 +109,6 @@ public class LoginActivity extends AppCompatActivity {
     public void buSignup(View view) {
         Intent mainIntent = new Intent(LoginActivity.this,SignupActivity.class);
         startActivity(mainIntent);
+        finish();
     }
 }

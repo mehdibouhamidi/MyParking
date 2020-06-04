@@ -32,6 +32,29 @@ public class SignupActivity extends AppCompatActivity {
     FirebaseFirestore fStore;
     String userID;
 
+
+    private long backPressedTime;
+    private Toast backToast;
+
+
+    @Override
+    public void onBackPressed() {
+
+
+        if(backPressedTime + 2000 > System.currentTimeMillis()){
+            backToast.cancel();
+            super.onBackPressed();
+
+            return;
+
+        }else{
+            backToast = Toast.makeText(getBaseContext(),"Tapez une autre fois pour quitter",Toast.LENGTH_SHORT);
+            backToast.show();
+        }
+        backPressedTime = System.currentTimeMillis();
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -2,6 +2,8 @@ package com.example.myparking;
 
 import android.content.Intent;
 import androidx.annotation.NonNull;
+
+/*import com.example.myparking.model.Adapter;*/
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.core.view.GravityCompat;
@@ -12,8 +14,11 @@ import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -26,11 +31,53 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     NavigationView navigationView;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
+
+    TextView but4;
+    RecyclerView myrecycleview;
+   /* Adapter adapter; */
+
+    private long backPressedTime;
+    private Toast backToast;
+
+
+    @Override
+    public void onBackPressed() {
+
+
+        if(backPressedTime + 2000 > System.currentTimeMillis()){
+            backToast.cancel();
+            super.onBackPressed();
+
+            return;
+
+        }else{
+            backToast = Toast.makeText(getBaseContext(),"Tapez une autre fois pour quitter",Toast.LENGTH_SHORT);
+            backToast.show();
+        }
+        backPressedTime = System.currentTimeMillis();
+
+
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        toolbar = findViewById(R.id.toolbar);
+
+
+
+//pour entrer a l'aoolication sans s'enregister une autre fois
+      /*  if(SaveSharedPreference.getUserName(Home.this).length()==0){
+            Intent intent= new Intent(Home.this,LoginActivity.class);
+            startActivity(intent);
+        }else{
+            finish();
+            startActivity(getIntent());
+
+        }
+        */
+        toolbar = findViewById(R.id.reservationDetailsTitle);
         setSupportActionBar(toolbar);
 
         drawerLayout = findViewById(R.id.drawer);
@@ -41,36 +88,57 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         actionBarDrawerToggle.syncState();
+/*
+        //il faut changer le type list string to sting pour l'uttiliser en username,matricule,email ,et list sting pour les reservations
+        List<String> mDatareceived = new ArrayList<>();
+        mDatareceived.add("first user for app");
+        adapter = new com.example.myparking.model.Adapter(mDatareceived);
+        myrecycleview.setLayoutManager(new LinearLayoutManager(this));
+        myrecycleview.setAdapter(adapter);
+*/
+
+
+
+
 
         //fragment home or principal loading by default
         fragmentManager =getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(container_fragment, new Fragment_Reservation());
+        fragmentTransaction.add(container_fragment, new Fragment_home());
         fragmentTransaction.commit();
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         drawerLayout.closeDrawer(GravityCompat.START);
-        if(menuItem.getItemId() == R.id.reservation){
+        if(menuItem.getItemId() == R.id.home_but){
             fragmentManager =getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(container_fragment, new Fragment_Reservation());
+            fragmentTransaction.replace(container_fragment, new Fragment_home());
             fragmentTransaction.commit();
+        }
+        if(menuItem.getItemId() == R.id.reservation){
+            Intent mainIntent = new Intent(Home.this,MainReservation.class);
+            startActivity(mainIntent);
+            finish();
         }
 
 
         if(menuItem.getItemId() == R.id.localisation){
-
+            Intent mainIntent = new Intent(Home.this,UserLocalisationActivity.class);
+            startActivity(mainIntent);
 
         }
-
-
-        if(menuItem.getItemId() == R.id.profil){
+        if(menuItem.getItemId() == R.id.monvehicule){
             fragmentManager =getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(container_fragment, new Fragment_profil());
+            fragmentTransaction.replace(container_fragment, new Fragment_monvehicule());
             fragmentTransaction.commit();
+        }
+
+        if(menuItem.getItemId() == R.id.profil){
+            Intent mainIntent = new Intent(Home.this,Profilpage.class);
+            startActivity(mainIntent);
         }
 
 
@@ -85,6 +153,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         if(menuItem.getItemId() == R.id.logout){
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+            finish();
+            Toast.makeText(Home.this, "logout", Toast.LENGTH_SHORT).show();
 
     }
         return true;
